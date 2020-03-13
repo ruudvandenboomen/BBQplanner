@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if error_message %}
+<p class="alert alert-danger"><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+<form action="{% url 'planner:login' %}" method="post">
+    {% csrf_token %}
+    <div>
+        <label for="username">Username</label><br>
+        <input class="form-control" type="text" name="username" id="username"><br>
+        <label for="password">Password</label><br>
+        <input class="form-control" type="text" name="password" id="password"><br>
+    </div>
+    <input class="btn btn-primary form-control" type="submit" value="Login"><br>
+    <a href="">Don't have an account yet?</a>
+</form>
+{% endblock %}
