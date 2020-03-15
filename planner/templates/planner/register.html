@@ -14,9 +14,9 @@
         <label for="email">Email</label><br>
         <input class="form-control" type="text" name="email" id="email"><br>
         <label for="password">Password</label><br>
-        <input class="form-control" type="text" name="password" id="password"><br>
+        <input class="form-control" type="password" name="password" id="password"><br>
     </div>
-    <input class="btn btn-primary form-control" type="submit" value="Login"><br>
-    <a href="">Don't have an account yet?</a>
+    <input class="btn btn-primary form-control" type="submit" value="Register"><br>
+    <a href="{% url 'planner:login' %}">Already have an account?</a>
 </form>
 {% endblock %}

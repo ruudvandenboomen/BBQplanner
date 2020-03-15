@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if error_message %}
+<p class="alert alert-danger"><strong>{{ error_message }}</strong></p>
+{% endif %}
+{% if success_message %}
+<p class="alert alert-success"><strong>{{ success_message }}</strong></p>
+{% endif %}
+
+<h1 class="text-center mb-3">New BBQ Event</h1>
+<a class="btn btn-primary" href="{% url 'planner:events' %}">My Events</a><br><br>
+
+
+<form action="{% url 'planner:new_event' %}" method="post">
+    {% csrf_token %}
+    <div>
+        <label for="date">Date</label><br>
+        <input class="form-control" type="date" name="date" id="date"><br>
+        <label for="time">Time</label><br>
+        <input class="form-control" type="time" name="time" id="time"><br>
+        <label for="meat_types">Available meat</label><br>
+        <select class="form-control custom-select" name="meat_types" id="meat_types" multiple="">
+            {% for meat in available_meat %}
+            <option value="{{ meat.name }}">{{ meat.name }}</option>
+            {% endfor %}
+        </select>
+        <a class="float-right" href="">Add new meat</a><br><br>
+    </div>
+    <input class="btn btn-primary form-control" type="submit" value="Create"><br>
+</form>
+
+{% endblock %}

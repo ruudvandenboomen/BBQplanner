@@ -12,9 +12,9 @@
         <label for="username">Username</label><br>
         <input class="form-control" type="text" name="username" id="username"><br>
         <label for="password">Password</label><br>
-        <input class="form-control" type="text" name="password" id="password"><br>
+        <input class="form-control" type="password" name="password" id="password"><br>
     </div>
     <input class="btn btn-primary form-control" type="submit" value="Login"><br>
-    <a href="">Don't have an account yet?</a>
+    <a href="{% url 'planner:register' %}">Don't have an account yet?</a>
 </form>
 {% endblock %}

@@ -7,16 +7,24 @@
 {% endif %}
 
 <h1 class="text-center mb-3">BBQ Events</h1>
-<a class="btn btn-primary" href="">New Event</a><br><br>
+<a class="btn btn-primary" href="{% url 'planner:new_event' %}">New Event</a><br><br>
 
 {% for event in events %}
 <div class="card mb-3">
     <div class="card-body">
         <div>Organizer: {{ event.organizer }}</div><br>
-        <div>Date: {{ event.date }}</div><br>
-        {% for meat in event.available_meat.all %}
-        <div>Available meat: {{ meat.name }}</div><br>
-        {% endfor %}
+        <div>Date: {{ event.date | date:'d-m-Y H:m' }}</div><br>
+        <div>Visitors:<br>
+            {% for visitor in event.visitors.all %}
+            <div>{{ visitor.name }}</div>
+            {% endfor %}
+        </div><br>
+        <div>Total present (visitors + guests): {{ event.total_visitors }}</div><br>
+        <div>Reserved meat:<br>
+            {% for meat, quantity in event.reserved_meat.items %}
+            <div>{{ quantity }} {{ meat }}</div>
+            {% endfor %}
+        </div><br>
         <div>Share link: <a href="{{ event.share_link }}">{{ event.share_link }}</a></div><br>
     </div>
 </div>

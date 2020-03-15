@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if error_message %}
+<p class="alert alert-danger"><strong>{{ error_message }}</strong></p>
+{% endif %}
+{% if success_message %}
+<p class="alert alert-success"><strong>{{ success_message }}</strong></p>
+{% endif %}
+
+<h1 class="text-center mb-3">BBQ Event</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <div>Organizer: {{ event.organizer }}</div><br>
+        <div>Date: {{ event.date | date:'d-m-Y H:m' }}</div>
+    </div>
+</div>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <div>
+        <label for="name">Name</label><br>
+        <input class="form-control" type="name" name="name" id="name"><br>
+        <label for="guests">Guests</label><br>
+        <input class="form-control" value="0" min="0" type="number" name="guests" id="guests"><br>
+        <label for="meat">Reserve Some Good Meat!</label><br>
+        {% for meat in event.available_meat.all %}
+        <label for="{{ meat.name }}">{{ meat.name }}</label>
+        <div class="col-sm-8 float-right"><input class="form-control" value="0" min="0" type="number" name="{{ meat.name }}" id="{{ meat.name }}"></div><br><br>
+        {% endfor %}
+    </div>
+    <input class="btn btn-primary form-control" type="submit" value="Register"><br><br>
+</form>
+{% endblock %}
