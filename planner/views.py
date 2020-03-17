@@ -1,14 +1,15 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.template import loader
+from datetime import datetime
+
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django import forms
-from datetime import datetime
 from django.db import IntegrityError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template import loader
+from django.urls import reverse
 
-from .models import Visitor, BBQEvent, Meat, MeatReservation
+from .models import BBQEvent, Meat, MeatReservation, Visitor
 
 
 def events_view(request):
@@ -56,8 +57,8 @@ def new_event_view(request):
                 event.share_link = f'http://127.0.0.1:8000/planner/event/{event.id}'
                 event.save()
                 context = {
-                'success_message': "Event Created!",
-                'available_meat': Meat.objects.all()
+                    'success_message': "Event Created!",
+                    'available_meat': Meat.objects.all()
                 }
             template = loader.get_template('planner/new_event.html')
             return HttpResponse(template.render(context, request))

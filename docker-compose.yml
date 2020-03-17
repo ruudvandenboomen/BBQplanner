@@ -1,0 +1,20 @@
+version: "3"
+services:
+    bbq-planner:
+        image: django
+        build: 
+            context: ./
+        ports:
+            - "8000:8000"
+        environment: 
+            DATABASE_USER: 'root'
+            DATABASE_PASSWORD: 'root'
+            DATABASE_HOST: 'mysql'
+            DATABASE_NAME: 'bbqplanner'
+    mysql:
+        image: mysql:5.7.15
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: 'bbqplanner'
+            MYSQL_ROOT_PASSWORD: 'root'
