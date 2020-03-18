@@ -96,10 +96,8 @@ def register_visitor(form, event):
     meat_reservations = []
     for meat in event.available_meat.all():
         if form.cleaned_data[meat.name]:
-            meat_reservation = MeatReservation(
-                meat=meat, quantity=int(form.cleaned_data[meat.name]))
-            meat_reservation.save()
-            meat_reservations.append(meat_reservation)
+            obj, created = MeatReservation.objects.get_or_create(meat=meat, quantity=int(form.cleaned_data[meat.name]))
+            meat_reservations.append(obj)
     visitor = Visitor(name=name, guests=guests)
     visitor.save()
     visitor.meat_reservations.set(meat_reservations)
