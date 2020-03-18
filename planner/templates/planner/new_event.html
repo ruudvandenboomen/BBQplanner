@@ -26,9 +26,11 @@
             <option value="{{ meat.name }}">{{ meat.name }}</option>
             {% endfor %}
         </select>
-        <a class="float-right" href="">Add new meat</a><br><br>
+        <a class="float-right" href="" data-toggle="modal" data-target="#exampleModal">Add new meat</a><br><br>
     </div>
     <input class="btn btn-primary form-control" type="submit" value="Create"><br>
 </form>
+
+{% include '../partials/_modal.html' %}
 
 {% endblock %}

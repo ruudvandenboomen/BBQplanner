@@ -9,6 +9,11 @@
 <h1 class="text-center mb-3">Your BBQ Events</h1>
 <a class="btn btn-primary" href="{% url 'planner:new_event' %}">New Event</a><br><br>
 
+
+{% if not events %}
+<p>Create your first event!</p>
+{% endif %}
+
 {% for event in events %}
 <div class="card mb-3">
     <div class="card-body">
