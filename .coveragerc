@@ -1,0 +1,5 @@
+[run]
+source = planner/*
+omit =
+   */migrations/*
+   manage.py

@@ -3,3 +3,5 @@
 Django==3.0.4
 gunicorn==19.6.0
 mysqlclient==1.4.6
+pytest-django==3.8.0
+pytest-cov==2.8.1

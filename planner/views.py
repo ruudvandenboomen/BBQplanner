@@ -76,18 +76,21 @@ def add_meat(request):
         'available_meat': Meat.objects.all()
     }
 
-    form = NewMeatForm(request.POST)
-    if request.method == 'POST':
-        if form.is_valid():
-            meat_name = form.cleaned_data['meat_name']
-            try:
-                Meat.save(Meat(name=meat_name))
-                context['success_message'] = "Meat added!"
-            except IntegrityError as e:
-                context['error_message'] = e.__cause__
-        else:
-            context['error_message'] = "Invalid form"
-    return HttpResponse(template.render(context, request))
+    if request.user.is_authenticated:
+        form = NewMeatForm(request.POST)
+        if request.method == 'POST':
+            if form.is_valid():
+                meat_name = form.cleaned_data['meat_name']
+                try:
+                    Meat.save(Meat(name=meat_name))
+                    context['success_message'] = "Meat added"
+                except IntegrityError as e:
+                    context['error_message'] = e.__cause__
+            else:
+                context['error_message'] = "Invalid form"
+        return HttpResponse(template.render(context, request))
+    else:
+        return HttpResponseRedirect(reverse('planner:login'))
 
 
 def register_visitor(form, event):
@@ -134,8 +137,10 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 return redirect('planner:events')
+            else:
+                context['error_message'] = "Wrong login credentials"
         else:
-            context['error_message'] = "Wrong login credentials."
+            context['error_message'] = "Invalid form"
     return HttpResponse(template.render(context, request))
 
 
@@ -163,5 +168,4 @@ def register_view(request):
             return redirect('planner:events')
         else:
             context['error_message'] = "Invalid form"
-    else:
-        return HttpResponse(template.render(context, request))
+    return HttpResponse(template.render(context, request))

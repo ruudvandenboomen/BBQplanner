@@ -8,3 +8,8 @@ $ docker-compose up
 $ docker-compose run bbq-planner python manage.py makemigrations
 $ docker-compose run bbq-planner python manage.py migrate
 ```
+
+## TEST
+```sh
+$ docker-compose run bbq-planner pytest
+```
