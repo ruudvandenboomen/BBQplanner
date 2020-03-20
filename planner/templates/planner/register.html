@@ -2,10 +2,6 @@
 
 {% block content %}
 
-{% if error_message %}
-<p class="alert alert-danger"><strong>{{ error_message }}</strong></p>
-{% endif %}
-
 <form action="{% url 'planner:register' %}" method="post">
     {% csrf_token %}
     <div>
