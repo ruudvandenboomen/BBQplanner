@@ -71,15 +71,71 @@ def test_event_found(auto_login_user, event_date):
     assert response.status_code == 200
 
 
+@pytest.fixture
+def meat_name():
+    return 'Pork'
+
+
 @pytest.mark.django_db
-def test_add_meat(auto_login_user):
+def test_add_meat(auto_login_user, meat_name):
     client, user = auto_login_user()
     url = reverse('planner:add_meat')
     data = {
-        'meat_name': 'Pork',
+        'meat_name': meat_name,
     }
     response = client.post(url, data=data)
     assert response.context['success_message'] == 'Meat added'
+
+
+@pytest.fixture
+def add_meat(auto_login_user, meat_name):
+    client, user = auto_login_user()
+    url = reverse('planner:add_meat')
+    data = {
+        'meat_name': meat_name,
+    }
+    response = client.post(url, data=data)
+
+
+@pytest.mark.django_db
+def test_create_event(auto_login_user, add_meat, meat_name):
+    client, user = auto_login_user()
+    add_meat
+    url = reverse('planner:new_event')
+    data = {
+        'date': '2020-03-27',
+        'time': '21:00',
+        'meat_types': meat_name
+    }
+    response = client.post(url, data=data)
+    assert response.context['success_message'] == 'Event created'
+
+
+@pytest.fixture
+def add_event(auto_login_user, add_meat, meat_name):
+    client, user = auto_login_user()
+    add_meat
+    url = reverse('planner:new_event')
+    data = {
+        'date': '2020-03-27',
+        'time': '21:00',
+        'meat_types': meat_name
+    }
+    response = client.post(url, data=data)
+
+
+@pytest.mark.django_db
+def test_register_visitor_for_event(client, add_event):
+    add_event
+    events = BBQEvent.objects.all()
+    url = reverse('planner:get_event', kwargs={'event_id': events[0].id})
+    data = {
+        'name': 'Piet',
+        'guests': 5,
+        'Pork': 3
+    }
+    response = client.post(url, data=data)
+    assert response.context['success_message'] == 'Registration successful'
 
 
 @pytest.mark.django_db
@@ -122,3 +178,15 @@ def test_register_data_validation(
     }
     response = client.post(url, data=data)
     assert response.context['error_message'] == error_message
+
+
+@pytest.mark.django_db
+def test_register_valid_data(client):
+    url = reverse('planner:register')
+    data = {
+        'username': 'username',
+        'email': 'email@hotmail.com',
+        'password': 'password'
+    }
+    response = client.post(url, data=data)
+    assert response.status_code == 302

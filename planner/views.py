@@ -60,7 +60,7 @@ def new_event_view(request):
         if request.method == 'POST':
             if form.is_valid():
                 create_event(request, form)
-                context['success_message'] = "Event Created!"
+                context['success_message'] = "Event created"
             else:
                 context['error_message'] = "Invalid form"
         else:
@@ -118,7 +118,7 @@ def get_event(request, event_id):
         form = RegisterEventPresenceForm(request.POST, event=event)
         if form.is_valid():
             register_visitor(form, event)
-            context['success_message'] = "Registration successful!"
+            context['success_message'] = "Registration successful"
         else:
             context['error_message'] = "Invalid form"
     return HttpResponse(template.render(context, request))
