@@ -3,3 +3,5 @@ source = planner/*
 omit =
    */migrations/*
    manage.py
+   BBQplanner/*
+   *test*
