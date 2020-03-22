@@ -41,14 +41,6 @@ def test_events_redirect(client):
 
 
 @pytest.mark.django_db
-def test_events_authenticated(client, auto_login_user):
-    client, user = auto_login_user()
-    url = reverse('planner:events')
-    response = client.get(url)
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
 def test_event_not_found(client):
     url = reverse('planner:get_event', kwargs={'event_id': 1})
     response = client.get(url)
@@ -60,20 +52,50 @@ def event_date():
     return timezone.now()
 
 
+@pytest.fixture
+def meat_name():
+    return 'Pork'
+
+
+@pytest.fixture
+def add_meat(auto_login_user, meat_name):
+    client, user = auto_login_user()
+    url = reverse('planner:add_meat')
+    data = {
+        'meat_name': meat_name,
+    }
+    client.post(url, data=data)
+
+
+@pytest.mark.django_db
+def test_events_authenticated(auto_login_user, add_meat, event_date):
+    client, user = auto_login_user()
+
+    add_meat
+    meat = Meat.objects.all()
+    event = BBQEvent(organizer=user, date=event_date)
+    event.save()
+    event.available_meat.set(meat)
+    visitor = Visitor(name='Piet', guests=4)
+    visitor.save()
+    meat_reservation = MeatReservation(meat=meat[0], quantity=3)
+    meat_reservation.save()
+    visitor.meat_reservations.set([meat_reservation])
+    event.visitors.set([visitor])
+
+    url = reverse('planner:events')
+    response = client.get(url)
+    assert response.status_code == 200
+
 @pytest.mark.django_db
 def test_event_found(auto_login_user, event_date):
     client, user = auto_login_user()
     event = BBQEvent(organizer=user, date=event_date)
     event.save()
-    url = reverse('planner:get_event', kwargs={'event_id': 1})
+    url = reverse('planner:get_event', kwargs={'event_id': event.id})
     response = client.get(url)
     assert response.context['event'] == event
     assert response.status_code == 200
-
-
-@pytest.fixture
-def meat_name():
-    return 'Pork'
 
 
 @pytest.mark.django_db
@@ -85,16 +107,6 @@ def test_add_meat(auto_login_user, meat_name):
     }
     response = client.post(url, data=data)
     assert response.context['success_message'] == 'Meat added'
-
-
-@pytest.fixture
-def add_meat(auto_login_user, meat_name):
-    client, user = auto_login_user()
-    url = reverse('planner:add_meat')
-    data = {
-        'meat_name': meat_name,
-    }
-    response = client.post(url, data=data)
 
 
 @pytest.mark.django_db
@@ -121,7 +133,7 @@ def add_event(auto_login_user, add_meat, meat_name):
         'time': '21:00',
         'meat_types': meat_name
     }
-    response = client.post(url, data=data)
+    client.post(url, data=data)
 
 
 @pytest.mark.django_db
