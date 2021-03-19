@@ -1,6 +1,6 @@
 #requirements.txt
 
-Django==3.0.4
+Django==3.1.6
 gunicorn==19.6.0
 mysqlclient==1.4.6
 pytest-django==3.8.0
